@@ -11,6 +11,8 @@
 		<Description>Helper for Dapper using MS SqlClient for Load Data and Save Data To MSSQL Database, for conex using ConnectionsString en settings</Description>
 		<Authors>Jose Luis Ordaz</Authors>
 		<Company>Jose Luis Ordaz</Company>
+    <PackageIcon>DapperMSSQL.jpeg</PackageIcon>
+    <PackageReadmeFile>Readme.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,5 +21,9 @@
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="images\DapperMSSQL.jpeg" Pack="true" PackagePath="\"/>
+    <None Include="Readme.md" Pack="true" PackagePath="\"/>
+  </ItemGroup>
 
 </Project>
