@@ -1,4 +1,4 @@
-## JLOrdaz.DapperDataMSSL
+## JLOrdaz.DapperDataMSSQL
 
 The Class `SQLDataAccess` handling database operations within the application. This includes connecting to the SQL database, executing queries, and managing data retrieval and updates. Below is a brief overview of the key functionalities provided by this file:
 
