@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackageId>JLOrdaz.DapperDataMSSQL</PackageId>
+    <PackageVersion>0.9.0</PackageVersion>
+		<Copyright>© 2024 Jose Luis Ordaz</Copyright>
+		<PackageTags>CRUD, SQL Server, Dapper, LoadData, Data Acces JLOrdaz</PackageTags>
+		<Description>Helper for Dapper using MS SqlClient for Load Data and Save Data To MSSQL Database, for conex using ConnectionsString en settings</Description>
+		<Authors>Jose Luis Ordaz</Authors>
+		<Company>Jose Luis Ordaz</Company>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.44" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+  </ItemGroup>
+
+
+</Project>
