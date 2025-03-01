@@ -10,7 +10,7 @@ namespace JLOrdaz.DapperDataMSSQL;
 /// </summary>
 /// <remarks>This interface is intended to be used with Dapper and Microsoft.Data.SqlClient.</remarks>
 /// 
-public class SQLDataAccess : ISQLDataAccess
+public class SQLDataAccess(IConfiguration config) : ISQLDataAccess
 {
     /// <summary>
     /// Executes a stored procedure and returns the result as an enumerable collection of the specified type.
@@ -21,9 +21,10 @@ public class SQLDataAccess : ISQLDataAccess
     /// <param name="parameters"></param>
     /// <param name="connectionString"></param>
     /// <returns></returns>
+    /// <remarks>If the stored procedure returns no results, the method returns an empty collection.</remarks>
     public async Task<IEnumerable<T>> LoadData<T, U>(string storeProcedure, U parameters, string connectionString)
     {
-        using IDbConnection conex = new SqlConnection(connectionString);
+        using IDbConnection conex = new SqlConnection(config.GetConnectionString(connectionString));
         return await conex.QueryAsync<T>(storeProcedure, parameters, commandType: CommandType.StoredProcedure) ?? [];
     }
 
@@ -36,9 +37,10 @@ public class SQLDataAccess : ISQLDataAccess
     /// <param name="parameters"></param>
     /// <param name="connectionString"></param>
     /// <returns></returns>
+    /// <remarks>If the stored procedure returns no results, the method returns null.</remarks>
     public async Task<T?> LoadFirst<T, U>(string storeProcedure, U parameters, string connectionString)
     {
-        using IDbConnection conex = new SqlConnection(connectionString);
+        using IDbConnection conex = new SqlConnection(config.GetConnectionString(connectionString));
         return await conex.QueryFirstOrDefaultAsync<T>(storeProcedure, parameters, commandType: CommandType.StoredProcedure);
     }
 
@@ -53,7 +55,7 @@ public class SQLDataAccess : ISQLDataAccess
     /// <remarks>This method is useful for stored procedures that perform insert, update, or delete operations.</remarks>
     public async Task SaveData<T>(string storeProcedure, T parameters, string connectionString)
     {
-        using IDbConnection conex = new SqlConnection(connectionString);
+        using IDbConnection conex = new SqlConnection(config.GetConnectionString(connectionString));
         await conex.ExecuteAsync(storeProcedure, parameters, commandType: CommandType.StoredProcedure);
     }
 }
