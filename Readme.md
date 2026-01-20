@@ -1,58 +1,70 @@
 ## JLOrdaz.DapperDataMSSQL
 
-The Class `SQLDataAccess` handling database operations within the application. This includes connecting to the SQL database, executing queries, and managing data retrieval and updates. Below is a brief overview of the key functionalities provided by this file:
+Lightweight helper to execute SQL Server stored procedures using Dapper and Microsoft.Data.SqlClient with a simple DI registration.
 
-### Key Functionalities
+### Install
 
-1. **Database Connection**:
-   - Establishes a connection to the SQL database using connection strings.
-   - Ensures secure and efficient database connectivity.
-
-2. **Data Retrieval**:
-   - Executes SQL queries to fetch data from the database.
-   - Maps the retrieved data to appropriate data models.
-
-3. **Data Insertion and Updates**:
-   - Handles the insertion of new records into the database.
-   - Manages updates to existing records ensuring data integrity.
-
-4. **Error Handling**:
-   - Implements robust error handling to manage database-related exceptions.
-   - Logs errors for debugging and maintenance purposes.
-
-### Example Usage
-
-Here is a basic example of how to use the `SQLDataAccess` class to retrieve data:
-
-```csharp
-// Create an instance of SQLDataAccess
-SQLDataAccess db = new SQLDataAccess();
-
-// Define a query to fetch data
-string query = "SELECT * FROM Users";
-
-// Execute the query and retrieve the results
-var users = db.LoadData<UserModel>(query);
-
-// Process the retrieved data
-foreach (var user in users)
-{
-    Console.WriteLine($"User ID: {user.Id}, User Name: {user.Name}");
-}
+```bash
+dotnet add package JLOrdaz.DapperDataMSSQL
 ```
 
-### Dependencies
-* **System.Data.SqlClient**: Used for SQL database connectivity.
-* **Dapper**: (If applicable) Used for object mapping and query execution.
+### Configuration
+Add your connection string in `appsettings.json` (or environment/config provider of your choice):
 
-Configuration
-Ensure that the connection string is correctly configured in the application's configuration file (e.g., appsettings.json or web.config).
-
-```csharp
+```json
 {
   "ConnectionStrings": {
-    "DB": "YourConnectionStringHere"
+    "DB": "Server=.;Database=MyDb;Trusted_Connection=True;TrustServerCertificate=True;"
   }
 }
 ```
+
+### Usage with Dependency Injection (recommended)
+Register the library in your DI container and inject `ISQLDataAccess` where needed.
+
+`Program.cs` (ASP.NET Core):
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+
+// Register JLOrdaz.DapperDataMSSQL services
+builder.Services.AddDapperDataMSSQL();
+
+var app = builder.Build();
+app.Run();
+```
+
+Example repository/service:
+```csharp
+using JLOrdaz.DapperDataMSSQL;
+
+public sealed class UserRepository
+{
+    private readonly ISQLDataAccess _db;
+
+    public UserRepository(ISQLDataAccess db)
+    {
+        _db = db;
+    }
+
+    public Task<IEnumerable<User>> GetUsersAsync() =>
+        _db.LoadData<User, object>("dbo.Users_GetAll", new { }, "DB");
+
+    public Task<User?> GetUserAsync(int id) =>
+        _db.LoadFirst<User, object>("dbo.Users_GetById", new { Id = id }, "DB");
+
+    public Task SaveUserAsync(User user) =>
+        _db.SaveData("dbo.Users_Upsert", new { user.Id, user.Name }, "DB");
+}
+```
+
+Notes:
+- `storeProcedure` is the stored procedure name (schema-qualified recommended).
+- `connectionString` is the name/key of the connection string in your configuration (e.g., `"DB"`).
+
+### Dependencies
+- Microsoft.Data.SqlClient
+- Dapper
+
+### License
+MIT
 

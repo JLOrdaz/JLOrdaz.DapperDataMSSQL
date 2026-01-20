@@ -8,8 +8,10 @@ namespace JLOrdaz.DapperDataMSSQL;
 public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Adds the DapperDataMSSQL data access services to the specified <see cref="IServiceCollection"/>.
+    /// Registers the Dapper-based SQL Server data access services.
     /// </summary>
+    /// <param name="services">The service collection to add services to.</param>
+    /// <returns>The same <see cref="IServiceCollection"/> instance so that additional calls can be chained.</returns>
     public static IServiceCollection AddDapperDataMSSQL(this IServiceCollection services)
     {
         return services.AddScoped<ISQLDataAccess, SQLDataAccess>();
